@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ManageProductsPage from "./pages/ManageProductsPage";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
     {
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/manageproducts",
-                element: <ManageProductsPage />
+                element: (
+                    <ProtectedRoute>
+                        <ManageProductsPage />
+                    </ProtectedRoute>
+                )
             }
         ]
     }
