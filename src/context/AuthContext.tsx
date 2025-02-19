@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { User, LoginCredentials, AuthResponse, AuthContextType } from "../types/auth.types";
 
 //skapa context, använder interface. Är null innan initieras
@@ -54,6 +54,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             throw error;
         }
     }
+
+    //validera inloggad användare
+    const checkUserStatus = async () => {
+        try {
+            const res = await fetch ("http://localhost:5000/auth/validate", {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if(res.ok) {
+                const data = await res.json();
+                setUser(data.user);
+            }
+
+        } catch (error) {
+            //logga ut om token är ogiltig
+            setUser(null);
+        }
+    }
+
+    //kör useEffect för att kontrollera om användare är inloggad. Sidladdning skickar då itne ut användare för skyddad rutt.
+    useEffect(() => {
+        checkUserStatus();
+    }, [])
 
     return (
         <AuthContext.Provider value={{user, login, logout}}>
