@@ -12,6 +12,13 @@ const LoginPage = () => {
     const {login, user} = useAuth();
     const navigate = useNavigate();
 
+    //kontrollera användare och redirect om finns
+    useEffect(() => {
+        if(user) {
+            navigate("/manageproducts");
+        }
+    }, [user])
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
