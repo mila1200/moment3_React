@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./css/LoginPage.css";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
 
@@ -7,9 +9,21 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
+    const {login, user} = useAuth();
+    const navigate = useNavigate();
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
+
+        try {
+
+            await login({email, password});
+            navigate("/manageproducts")
+            
+        } catch (error) {
+            setError("Inloggning misslyckades. Kontrollera e-post och lösenord.")
+        }
     };
 
 

@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             const data = await res.json() as AuthResponse;
 
-            setUser(data.user)
+            setUser(data.user);
 
         } catch (error) {
             throw error;
