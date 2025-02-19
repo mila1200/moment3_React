@@ -1,4 +1,10 @@
+import { useState, useEffect } from "react"
+import ManageProductsPage from "./ManageProductsPage"
 
+export interface Product {
+  id: string,
+  
+}
 
 const HomePage = () => {
   return (
