@@ -1,4 +1,8 @@
 import { useAuth } from "../context/AuthContext"
+import { useState } from "react";
+import { Product } from "../types/product.types";
+
+
 
 const ManageProductsPage = () => {
 
