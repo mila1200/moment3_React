@@ -30,6 +30,9 @@ const HomePage = () => {
   //felmeddelande för listan
   const [listError, setListError] = useState<string | null>(null);
 
+  //felmeddelande för radera
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   //validerar inmatad data
   const validateForm = (data: Product) => {
 
@@ -118,8 +121,27 @@ const HomePage = () => {
     } catch (error) {
       setFormError({ name: "Det gick inte att lägga till produkten." })
     }
-
   }
+
+  //radera produkt
+  const deleteProduct = async (id: string) => {
+    try {
+      const res = await fetch("http://localhost:5000/product/" + id, {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      if (!res.ok) {
+        throw new Error;
+      }
+
+      fetchProducts()
+    } catch (error) {
+      setDeleteError("Det gick inte att radera posten.")
+    }
+  }
+
+
 
   //loopar igenom produkter och skriver ut dem i en tabell
   return (
@@ -147,9 +169,11 @@ const HomePage = () => {
                 <td>{product.price}</td>
                 <td>{product.units}</td>
                 <td>
+                  {/*testar om det finns id eftersom id är ?*/}
                   <button onClick={() => editProduct(product._id)}>Redigera</button>
-                  <button onClick={() => deleteProduct(product._id)}>Radera</button>
+                  <button onClick={() => product._id && deleteProduct(product._id)}>Radera</button>
                 </td>
+                {deleteError && <span className="errorMessage">{deleteError}</span>}
               </tr>
             ))}
           </tbody>
