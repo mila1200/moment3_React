@@ -1,12 +1,9 @@
-import { useAuth } from "../context/AuthContext"
-import { useState } from "react";
-import { Product, ManageProductsProps } from "../types/product.types";
-import { useNavigate } from "react-router-dom";
-import ProductList from "../components/ProductList";
+import { useState, useEffect } from "react"
+import { Product } from "../types/product.types"
 
-const ManageProductsPage: React.FC<ManageProductsProps> = ({ products, fetchProducts }) => {
+const HomePage = () => {
 
-  //interface för felhantering. price och units är noll för att kunna skriva ut felmeddelande
+  //interface för felhantering
   interface ErrorInterface {
     name?: string,
     brand?: string,
@@ -15,9 +12,8 @@ const ManageProductsPage: React.FC<ManageProductsProps> = ({ products, fetchProd
     units?: string
   }
 
-  //state för att hantera nya produkter
-  const [newProduct, setNewProduct] = useState<Product>({
-    _id: "",
+  //states för att lagra datan i formuläret
+  const [formData, setFormData] = useState<Product>({
     name: "",
     brand: "",
     description: "",
@@ -25,113 +21,175 @@ const ManageProductsPage: React.FC<ManageProductsProps> = ({ products, fetchProd
     units: 0
   })
 
-  //aktivera möjlighet att skriva ut användarens förnamn
-  const { user } = useAuth();
+  //state för produkterna i listan
+  const [products, setProducts] = useState<Product[]>([]);
 
-  //state för felhantering
-  const [error, setError] = useState<ErrorInterface>({});
+  //felmeddelande för formuläret
+  const [formError, setFormError] = useState<ErrorInterface>({})
 
-  const navigate = useNavigate();
+  //felmeddelande för listan
+  const [listError, setListError] = useState<string | null>(null);
 
-  //lägg till produkt
-  const addProduct = async () => {
+  //validerar inmatad data
+  const validateForm = (data: Product) => {
 
     const validationError: ErrorInterface = {};
 
-    if (!newProduct.name) validationError.name = "Produktnamn krävs.";
-    if (!newProduct.brand) validationError.brand = "Varumärke krävs.";
-    if (!newProduct.description) validationError.description = "Beskrivning krävs.";
-    if (newProduct.price <= 0) validationError.price = "Pris måste vara mer än 0.";
-    if (newProduct.units <= 0) validationError.units = "Antal måste vara störr än 0.";
-
-    //om det finns fel, uppdatera errorState och avbryt
-    if (Object.keys(validationError).length > 0) {
-      setError(validationError);
-      return;
+    if (!data.name) {
+      validationError.name = "Du måste ange ett namn";
     }
 
+    if (!data.brand) {
+      validationError.brand = "Du måste ange ett varumärke";
+    }
+    if (!data.description) {
+      validationError.description = "Du måste ange en beskrivning";
+    }
+    if (data.price < 0) {
+      validationError.price = "Priset måste vara högre än 0";
+    }
+    if (data.units > 100000) {
+      validationError.units = "Du kan inte lägga till fler än 100.000"
+    }
+
+    return validationError;
+  }
+
+  //hämtar listan 
+  const fetchProducts = async () => {
     try {
       const res = await fetch("http://localhost:5000/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
+        method: "GET",
+        credentials: "include"
       });
 
       if (!res.ok) {
         throw new Error;
       }
 
-      fetchProducts();
-      setNewProduct({ _id: "", name: "", brand: "", description: "", price: 0, units: 0 });
-      setError({});
-
+      const data = await res.json();
+      setProducts(data);
     } catch (error) {
-      setError({ name: "Något gick fel vid skapandet av produkten." })
+      setListError("Fel vid inhämtning av produkter.")
     }
   };
 
-  //radera produkt
-  const deleteProduct = async (id: string) => {
+  useEffect(() => {
+    fetchProducts();
+  }, [])
+
+  const addProduct = async (event: any) => {
+    //förhindrar sidomladdning
+    event.preventDefault();
+
+    const validationError = validateForm(formData);
+
+    if (Object.keys(validationError).length > 0) {
+      setFormError(validationError);
+    } else {
+      setFormError({});
+    }
+
+    //post-anrop
     try {
-      const res = await fetch(`http://localhost:5000/product/${id}`, {
-        method: "DELETE",
+      const res = await fetch("http://localhost:5000/product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData)
       });
 
       if (!res.ok) {
-        throw new Error;
+        throw new Error("Det blev ett fel: " + res.status);
       }
 
       fetchProducts();
+
+      setFormData({
+        name: "",
+        brand: "",
+        description: "",
+        price: 0,
+        units: 0
+      })
+
     } catch (error) {
-      setError({ name: "Fel vid radering av produkt" });
+      setFormError({ name: "Det gick inte att lägga till produkten." })
     }
+
   }
 
+  //loopar igenom produkter och skriver ut dem i en tabell
   return (
     <>
-      <h1>Hantera produkter</h1>
-      <h2>Välkommen, {user ? user.firstname : ""}!</h2>
+      <div>
+        <h1>Välkommen</h1>
+        <h2>Produkter i lager</h2>
+        <div className="errorMessage">{listError && <p>{listError}</p>}</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Produktnamn</th>
+              <th>Varumärke</th>
+              <th>Beskrivning</th>
+              <th>Pris</th>
+              <th>Antal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td>{product.name}</td>
+                <td>{product.brand}</td>
+                <td>{product.description}</td>
+                <td>{product.price}</td>
+                <td>{product.units}</td>
+                <td>
+                  <button onClick={() => editProduct(product._id)}>Redigera</button>
+                  <button onClick={() => deleteProduct(product._id)}>Radera</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <h3>Lägg till produkt</h3>
-      <form className="inputForm" onSubmit={addProduct}>
-        {error.name && <span className="errorMessage">{error.name}</span>}
-        <br />
-        <label className="inputLabel" htmlFor="name">Produktnamn:</label>
-        <br />
-        <input type="text" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
-        <br />
+      <div>
+        <h2>Lägg till produkt</h2>
+        <form className="inputForm" onSubmit={addProduct}>
+          <label className="inputLabel" htmlFor="name"><strong>Varunamn:</strong></label><br />
+          <input type="text" name="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} />
+          <br />
+          {formError.name && <span className="errorMessage">{formError.name}</span>}
 
-        {error.brand && <span className="errorMessage">{error.brand}</span>}
-        <label className="inputLabel" htmlFor="brand">Varumärke:</label>
-        <br />
-        <input type="text" value={newProduct.brand} onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })} />
-        <br />
+          <label className="inputLabel" htmlFor="brand"><strong>Varumärke:</strong></label><br />
+          <input type="text" name="brand" value={formData.brand} onChange={(event) => setFormData({ ...formData, brand: event.target.value })} />
+          <br />
+          {formError.brand && <span className="errorMessage">{formError.brand}</span>}
 
-        {error.description && <span className="errorMessage">{error.description}</span>}
-        <label className="inputLabel" htmlFor="description">Beskrivning:</label>
-        <br />
-        <textarea value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} />
-        <br />
+          <label className="inputLabel" htmlFor="description"><strong>Beskrivning:</strong></label><br />
+          <textarea name="description" value={formData.description} onChange={(event) => setFormData({ ...formData, description: event.target.value })} />
+          <br />
+          {formError.description && <span className="errorMessage">{formError.description}</span>}
 
-        {error.price && <span className="errorMessage">{error.price}</span>}
-        <label className="inputLabel" htmlFor="price">Pris:</label>
-        <br />
-        <input type="number" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })} />
-        <br />
+          <label className="inputLabel" htmlFor="price"><strong>Pris:</strong></label><br />
+          <input type="number" name="price" value={formData.price} onChange={(event) => setFormData({ ...formData, price: Number(event.target.value) })} />
+          <br />
+          {formError.price && <span className="errorMessage">{formError.price}</span>}
 
-        {error.units && <span className="errorMessage">{error.units}</span>}
-        <label className="inputLabel" htmlFor="units">Antal:</label>
-        <br />
-        <input type="number" value={newProduct.units} onChange={(e) => setNewProduct({ ...newProduct, units: Number(e.target.value) })} />
-        <br />
+          <label className="inputLabel" htmlFor="units"><strong>Antal:</strong></label><br />
+          <input type="number" name="units" value={formData.units} onChange={(event) => setFormData({ ...formData, units: Number(event.target.value) })} />
+          <br />
+          {formError.units && <span className="errorMessage">{formError.units}</span>}
 
-        <input type="submit" value="Lägg till" />
-      </form>
-
-      <h3>Produkter</h3>
-      <ProductList products={products} onDelete={deleteProduct} onEdit={(id) => navigate(`/products/${id}`)} />
+          <input type="submit" value="Lägg till" />
+        </form>
+      </div>
     </>
-  )
-}
 
-export default ManageProductsPage
+  );
+};
+
+export default HomePage
