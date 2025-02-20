@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Product } from "../types/product.types"
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
 
@@ -57,6 +58,9 @@ const HomePage = () => {
 
     return validationError;
   }
+
+  //aktivera navigering
+  const navigate = useNavigate();
 
   //hämtar listan 
   const fetchProducts = async () => {
@@ -141,7 +145,10 @@ const HomePage = () => {
     }
   }
 
-
+  //för att uppdatera produkt
+  const editProduct = (id:string) => {
+    navigate("/manageproducts/" + id);
+  }
 
   //loopar igenom produkter och skriver ut dem i en tabell
   return (
@@ -170,7 +177,7 @@ const HomePage = () => {
                 <td>{product.units}</td>
                 <td>
                   {/*testar om det finns id eftersom id är ?*/}
-                  <button onClick={() => editProduct(product._id)}>Redigera</button>
+                  <button onClick={() => product._id && editProduct(product._id)}>Redigera</button>
                   <button onClick={() => product._id && deleteProduct(product._id)}>Radera</button>
                 </td>
                 {deleteError && <span className="errorMessage">{deleteError}</span>}

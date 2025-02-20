@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import ManageProductsPage from "./pages/ManageProductsPage";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UpdateProductPage from "./pages/UpdateProductPage";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,14 @@ const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <ManageProductsPage />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/manageproducts/:id",
+                element: (
+                    <ProtectedRoute>
+                        <UpdateProductPage />
                     </ProtectedRoute>
                 )
             }
