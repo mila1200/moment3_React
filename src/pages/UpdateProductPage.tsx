@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Product } from "../types/product.types";
+import "./css/UpdateProductPage.css"
 
 const UpdateProductPage = () => {
     //hämta produktens id från URL 
@@ -75,37 +76,39 @@ const UpdateProductPage = () => {
 
 
     return (
-        <div>
-            <h1>Uppdatera produkt</h1>
-            {error && <span className="errorMessage">{error}</span>}
+        <div className="updateContainer">
+            <div className="updateBox">
+                <h1>Uppdatera produkt</h1>
+                {error && <span className="errorMessage">{error}</span>}
 
-            {product ? (
-                <form onSubmit={updateProduct}>
-                <label htmlFor="name">Namn:</label><br />
-                <input type="text" name="name" value={product?.name} onChange={inputChange} />
-                <br />
+                {product ? (
+                    <form onSubmit={updateProduct}>
+                        <label htmlFor="name">Namn:</label><br />
+                        <input type="text" name="name" value={product?.name} onChange={inputChange} />
+                        <br />
 
-                <label htmlFor="brand">Varumärke:</label><br />
-                <input type="text" name="brand" value={product?.brand} onChange={inputChange} />
-                <br />
+                        <label htmlFor="brand">Varumärke:</label><br />
+                        <input type="text" name="brand" value={product?.brand} onChange={inputChange} />
+                        <br />
 
-                <label htmlFor="description">Beskrivning:</label><br />
-                <textarea name="description" value={product?.description} onChange={inputChange} />
-                <br />
+                        <label htmlFor="description">Beskrivning:</label><br />
+                        <textarea name="description" value={product?.description} onChange={inputChange} />
+                        <br />
 
-                <label htmlFor="price">Pris:</label><br />
-                <input type="number" name="price" value={product?.price} onChange={inputChange} />
-                <br />
+                        <label htmlFor="price">Pris:</label><br />
+                        <input type="number" name="price" value={product?.price} onChange={inputChange} />
+                        <br />
 
-                <label htmlFor="units">Antal:</label><br />
-                <input type="text" name="units" value={product?.units} onChange={inputChange} />
-                <br />
+                        <label htmlFor="units">Antal:</label><br />
+                        <input type="text" name="units" value={product?.units} onChange={inputChange} />
+                        <br />
 
-                <input type="submit" value="Uppdatera" />
-            </form>
-            ) : (
-                <p>Laddar produkt...</p>
-            )}
+                        <input id="updateBtn" type="submit" value="Uppdatera" />
+                    </form>
+                ) : (
+                    <p className="loading" >Laddar produkt...</p>
+                )}
+            </div>
         </div>
     )
 }

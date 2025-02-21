@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Product } from "../types/product.types"
 import { useNavigate } from "react-router-dom";
+import "./css/ManageProductsPage.css"
 
 const HomePage = () => {
 
@@ -146,77 +147,82 @@ const HomePage = () => {
   }
 
   //för att uppdatera produkt
-  const editProduct = (id:string) => {
+  const editProduct = (id: string) => {
     navigate("/manageproducts/" + id);
   }
 
   //loopar igenom produkter och skriver ut dem i en tabell
   return (
     <>
-      <div>
+      <div className="manageContainer">
         <h1>Välkommen</h1>
-        <h2>Produkter i lager</h2>
-        <div className="errorMessage">{listError && <p>{listError}</p>}</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Produktnamn</th>
-              <th>Varumärke</th>
-              <th>Beskrivning</th>
-              <th>Pris</th>
-              <th>Antal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id}>
-                <td>{product.name}</td>
-                <td>{product.brand}</td>
-                <td>{product.description}</td>
-                <td>{product.price}</td>
-                <td>{product.units}</td>
-                <td>
-                  {/*testar om det finns id eftersom id är ?*/}
-                  <button onClick={() => product._id && editProduct(product._id)}>Redigera</button>
-                  <button onClick={() => product._id && deleteProduct(product._id)}>Radera</button>
-                </td>
-                {deleteError && <span className="errorMessage">{deleteError}</span>}
+        <div className="manageBox">
+          <h2>Produkter i lager</h2>
+          <div className="errorMessage">{listError && <p>{listError}</p>}</div>
+          <table className="manageTable">
+            <thead>
+              <tr>
+                <th>Produktnamn</th>
+                <th>Varumärke</th>
+                <th>Beskrivning</th>
+                <th>Pris</th>
+                <th>Antal</th>
+                <th>Åtgärder</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td>{product.name}</td>
+                  <td>{product.brand}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}</td>
+                  <td>{product.units}</td>
+                  <td>
+                    {/*testar om det finns id eftersom id är ?*/}
+                    <button onClick={() => product._id && editProduct(product._id)}>Redigera</button>
+                    <button onClick={() => product._id && deleteProduct(product._id)}>Radera</button>
+                  </td>
+                  {deleteError && <span className="errorMessage">{deleteError}</span>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div>
-        <h2>Lägg till produkt</h2>
-        <form className="inputForm" onSubmit={addProduct}>
-          <label className="inputLabel" htmlFor="name"><strong>Varunamn:</strong></label><br />
-          <input type="text" name="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} />
-          <br />
-          {formError.name && <span className="errorMessage">{formError.name}</span>}
+      <div className="manageFormContainer">
+        <div className="manageForm">
+          <h2>Lägg till produkt</h2>
+          <form className="inputForm" onSubmit={addProduct}>
+            <label className="inputLabel" htmlFor="name"><strong>Varunamn:</strong></label><br />
+            <input type="text" name="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} />
+            <br />
+            {formError.name && <span className="errorMessage">{formError.name}</span>}
 
-          <label className="inputLabel" htmlFor="brand"><strong>Varumärke:</strong></label><br />
-          <input type="text" name="brand" value={formData.brand} onChange={(event) => setFormData({ ...formData, brand: event.target.value })} />
-          <br />
-          {formError.brand && <span className="errorMessage">{formError.brand}</span>}
+            <label className="inputLabel" htmlFor="brand"><strong>Varumärke:</strong></label><br />
+            <input type="text" name="brand" value={formData.brand} onChange={(event) => setFormData({ ...formData, brand: event.target.value })} />
+            <br />
+            {formError.brand && <span className="errorMessage">{formError.brand}</span>}
 
-          <label className="inputLabel" htmlFor="description"><strong>Beskrivning:</strong></label><br />
-          <textarea name="description" value={formData.description} onChange={(event) => setFormData({ ...formData, description: event.target.value })} />
-          <br />
-          {formError.description && <span className="errorMessage">{formError.description}</span>}
+            <label className="inputLabel" htmlFor="description"><strong>Beskrivning:</strong></label><br />
+            <textarea name="description" value={formData.description} onChange={(event) => setFormData({ ...formData, description: event.target.value })} />
+            <br />
+            {formError.description && <span className="errorMessage">{formError.description}</span>}
 
-          <label className="inputLabel" htmlFor="price"><strong>Pris:</strong></label><br />
-          <input type="number" name="price" value={formData.price} onChange={(event) => setFormData({ ...formData, price: Number(event.target.value) })} />
-          <br />
-          {formError.price && <span className="errorMessage">{formError.price}</span>}
+            <label className="inputLabel" htmlFor="price"><strong>Pris:</strong></label><br />
+            <input type="number" name="price" value={formData.price} onChange={(event) => setFormData({ ...formData, price: Number(event.target.value) })} />
+            <br />
+            {formError.price && <span className="errorMessage">{formError.price}</span>}
 
-          <label className="inputLabel" htmlFor="units"><strong>Antal:</strong></label><br />
-          <input type="number" name="units" value={formData.units} onChange={(event) => setFormData({ ...formData, units: Number(event.target.value) })} />
-          <br />
-          {formError.units && <span className="errorMessage">{formError.units}</span>}
+            <label className="inputLabel" htmlFor="units"><strong>Antal:</strong></label><br />
+            <input type="number" name="units" value={formData.units} onChange={(event) => setFormData({ ...formData, units: Number(event.target.value) })} />
+            <br />
+            {formError.units && <span className="errorMessage">{formError.units}</span>}
 
-          <input type="submit" value="Lägg till" />
-        </form>
+            <input id="manageBtn" type="submit" value="Lägg till" />
+          </form>
+        </div>
       </div>
     </>
 

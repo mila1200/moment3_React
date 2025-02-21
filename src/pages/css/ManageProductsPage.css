@@ -1,0 +1,88 @@
+.manageContainer {
+    margin: 0 auto;
+    max-width: 1180px;
+
+    h1 {
+        text-align: center;
+    }
+}
+
+.manageBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.manageTable {
+    max-width: 60%;
+
+    td,
+    th {
+        border: 1px solid black;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: green;
+        color: white;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    button {
+        padding: 5% 7%;
+        background-color: green;
+        color: white;
+        font-size: 1em;
+        width: 100px;
+        margin: 2%;
+    }
+}
+
+.errorMessage {
+    margin: 10px;
+    color: red;
+}
+
+.manageFormContainer {
+    margin: 2% auto;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .manageForm {
+
+        width: 400px;
+        background-color: #f2f2f2;
+        padding: 3%;
+        box-shadow: 3px 2px 2px 2px;
+
+        input,
+        textarea {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 5%;
+            font-size: 1.2em;
+        }
+
+        #manageBtn {
+            width: 100%;
+            background-color: green;
+            color: white;
+            font-size: 1em;
+        }
+    }
+
+
+
+}

@@ -1,8 +1,9 @@
+import "./css/Footer.css"
 
 const Footer = () => {
   return (
     <footer>
-        Moment 3 - Mikael Larsson, Miun 2025
+        <p>Moment 3 - Mikael Larsson, Miun 2025</p>
     </footer>
   )
 }
