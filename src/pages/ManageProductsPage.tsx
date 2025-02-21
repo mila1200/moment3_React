@@ -93,14 +93,14 @@ const HomePage = () => {
     event.preventDefault();
 
     const validationError = validateForm(formData);
+    console.log(validationError)
 
     //kontrollerar ev. felmeddelanden
     if (Object.keys(validationError).length > 0) {
       setFormError(validationError);
-    } else {
-      setFormError({});
-    }
-
+      return;
+    } 
+    
     //post-anrop
     try {
       const res = await fetch("http://localhost:5000/product", {
@@ -199,30 +199,31 @@ const HomePage = () => {
         <div className="manageForm">
           <h2>Lägg till produkt</h2>
           <form className="inputForm" onSubmit={addProduct}>
+            {formError.name && <span className="errorMessage">{formError.name}</span>}<br />
             <label className="inputLabel" htmlFor="name"><strong>Varunamn:</strong></label><br />
             <input type="text" name="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} />
             <br />
-            {formError.name && <span className="errorMessage">{formError.name}</span>}
-
+         
+         {formError.brand && <span className="errorMessage">{formError.brand}</span>}<br />
             <label className="inputLabel" htmlFor="brand"><strong>Varumärke:</strong></label><br />
             <input type="text" name="brand" value={formData.brand} onChange={(event) => setFormData({ ...formData, brand: event.target.value })} />
             <br />
-            {formError.brand && <span className="errorMessage">{formError.brand}</span>}
-
+           
+            {formError.description && <span className="errorMessage">{formError.description}</span>} <br />
             <label className="inputLabel" htmlFor="description"><strong>Beskrivning:</strong></label><br />
             <textarea name="description" value={formData.description} onChange={(event) => setFormData({ ...formData, description: event.target.value })} />
             <br />
-            {formError.description && <span className="errorMessage">{formError.description}</span>}
-
+            
+            {formError.price && <span className="errorMessage">{formError.price}</span>}<br />
             <label className="inputLabel" htmlFor="price"><strong>Pris:</strong></label><br />
             <input type="number" name="price" value={formData.price} onChange={(event) => setFormData({ ...formData, price: Number(event.target.value) })} />
             <br />
-            {formError.price && <span className="errorMessage">{formError.price}</span>}
-
+            
+            {formError.units && <span className="errorMessage">{formError.units}</span>}<br />
             <label className="inputLabel" htmlFor="units"><strong>Antal:</strong></label><br />
             <input type="number" name="units" value={formData.units} onChange={(event) => setFormData({ ...formData, units: Number(event.target.value) })} />
             <br />
-            {formError.units && <span className="errorMessage">{formError.units}</span>}
+            
 
             <input id="manageBtn" type="submit" value="Lägg till" />
           </form>
