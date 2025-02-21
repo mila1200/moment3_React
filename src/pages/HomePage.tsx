@@ -1,9 +1,11 @@
+//importera funktionalitet
 import { useState, useEffect } from "react"
 import { Product } from "../types/product.types"
 import "./css/HomePage.css"
 
 const HomePage = () => {
 
+  //states
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null)
 
@@ -12,6 +14,7 @@ const HomePage = () => {
     try {
       const res = await fetch("http://localhost:5000/products", {
         method: "GET",
+        //inkludera cookies
         credentials: "include"
       });
 
@@ -26,6 +29,7 @@ const HomePage = () => {
     }
   };
 
+  //hämta produkter vid första rendering
   useEffect(() => {
     fetchProducts();
   }, [])

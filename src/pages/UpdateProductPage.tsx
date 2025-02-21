@@ -1,3 +1,4 @@
+//importera funktionalitet
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Product } from "../types/product.types";
@@ -6,6 +7,7 @@ import "./css/UpdateProductPage.css"
 const UpdateProductPage = () => {
     //hämta produktens id från URL 
     const { id } = useParams();
+    //navigering
     const navigate = useNavigate();
 
     //states för att hantera produkt och fel
@@ -45,7 +47,7 @@ const UpdateProductPage = () => {
         }));
     }
 
-
+//uppdaterar produkten och skickar vidare användaren till /manageproducts
     const updateProduct = async (e: any) => {
         e.preventDefault();
 
@@ -80,7 +82,8 @@ const UpdateProductPage = () => {
             <div className="updateBox">
                 <h1>Uppdatera produkt</h1>
                 {error && <span className="errorMessage">{error}</span>}
-
+                
+                {/*Om produkten har hämtats hämtas ett formulär med värden. Vid förändring anropas inputChange*/}
                 {product ? (
                     <form onSubmit={updateProduct}>
                         <label htmlFor="name">Namn:</label><br />

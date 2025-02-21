@@ -1,3 +1,4 @@
+//importerar funktionalitet
 import { useState, useEffect } from "react";
 import "./css/LoginPage.css";
 import { useAuth } from "../context/AuthContext";
@@ -5,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
 
+    //states
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
+    //aktiverar navigering och hanterar inloggning
     const {login, user} = useAuth();
     const navigate = useNavigate();
 
@@ -19,6 +22,7 @@ const LoginPage = () => {
         }
     }, [user])
 
+    //hanterar inloggningsformuläret. Om ok, navigerar till /manageproducts
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
@@ -39,6 +43,7 @@ const LoginPage = () => {
             <div className="loginBox">
 
                 <h1>Logga in</h1>
+                {/*handlesubmit anropas när knappen klickas på. Epost och lösenord är kopplade till email och password*/}
                 <form onSubmit={handleSubmit}>
                     <div className="errorMessage">{error && <p>{error}</p>}</div>
 

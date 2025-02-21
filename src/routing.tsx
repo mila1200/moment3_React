@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateProductPage from "./pages/UpdateProductPage";
 
+//routing. Layout visar det innehåll som ska visas enligt nedan.
 const router = createBrowserRouter([
     {
         path: "/",

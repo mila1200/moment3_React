@@ -5,8 +5,10 @@ import "./css/Header.css"
 
 const Header = () => {
 
+  //hämtar användare och logout-funktion
   const { user, logout } = useAuth();
 
+  //meny-länkar. om användaren är inloggad visas istället knappen för att logga ut.
   return (
     <>
       <header>

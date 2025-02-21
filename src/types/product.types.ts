@@ -1,3 +1,4 @@
+//definierar produkt, id är valfritt
 export interface Product {
     _id?: string,
     name: string,

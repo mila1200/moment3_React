@@ -1,5 +1,6 @@
 import "./css/Footer.css"
 
+//footer-komponent
 const Footer = () => {
   return (
     <footer>

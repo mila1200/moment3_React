@@ -8,12 +8,15 @@ interface AuthProviderProps {
     children: ReactNode
 }
 
+//omger andra komponenter för auth via context
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
+    //states
     const [user, setUser] = useState<User | null>(null);
 
     const login = async (credentials: LoginCredentials) => {
         
+        //post-förfrågan skickas med användaruppgifter
         try {
             const res = await fetch("http://localhost:5000/users/login", {
                 method: "POST",
@@ -37,6 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }
 
+    //anropar api för att logga ut användare.
     const logout = async () => {
         try {
             const response = await fetch("http://localhost:5000/logout", {
@@ -79,6 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         checkUserStatus();
     }, [])
 
+    //delar user, login och logout till barnkomponenter
     return (
         <AuthContext.Provider value={{user, login, logout}}>
             {children}
@@ -86,6 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     )
 }
 
+//custom hook för att kontrollera contexten
 export const useAuth = () : AuthContextType => {
     const context = useContext(AuthContext);
 

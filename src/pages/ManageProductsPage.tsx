@@ -1,3 +1,4 @@
+//importerar funktionalitet
 import { useState, useEffect } from "react"
 import { Product } from "../types/product.types"
 import { useNavigate } from "react-router-dom";
@@ -86,12 +87,14 @@ const HomePage = () => {
     fetchProducts();
   }, [])
 
+  //lägga till produkt
   const addProduct = async (event: any) => {
     //förhindrar sidomladdning
     event.preventDefault();
 
     const validationError = validateForm(formData);
 
+    //kontrollerar ev. felmeddelanden
     if (Object.keys(validationError).length > 0) {
       setFormError(validationError);
     } else {
@@ -191,6 +194,7 @@ const HomePage = () => {
         </div>
       </div>
 
+      {/*formulär som håller värden och uppdateras vid förändring. Felhantering vid fel i fältet. Skickar till addProduct vid submit.*/}
       <div className="manageFormContainer">
         <div className="manageForm">
           <h2>Lägg till produkt</h2>
